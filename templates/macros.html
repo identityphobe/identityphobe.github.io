@@ -1,0 +1,99 @@
+{% macro header() %}
+<div class="header">
+    <h1 class="site-title"><a href="{{ config.base_url }}">{{ config.title }}</a></h1>
+    <p class="site-tagline">{{ config.description }}</p>
+    <div class="nav">
+        <a class="nav-btn" href="#">
+            <span class="ci ci-burger"></span>
+        </a>
+        <ul class="nav-list">
+            {% if config.extra.slim_menu %}
+            {% for item in config.extra.slim_menu %}
+            <li><a href="{{ item.url | safe | replace(from="$BASE_URL", to=config.base_url) }}">{{ item.name }}</a></li>
+            {% endfor %}
+            {% endif %}
+            <li class="spacer">&ac;</li>
+            {% if config.extra.slim_social %}
+            {% for item in config.extra.slim_social %}
+            <li><a href="{{ item.url | safe }}">{{ item.name }}</a></li>
+            {% endfor %}
+            {% endif %}
+        </ul>
+    </div>
+</div>
+{% endmacro header %}
+
+{% macro post_header(page) %}
+<h2 class="post-title"><a href="{{ page.permalink }}">{{ page.title }}</a></h2>
+<div class="post-header">
+    <span class="post-date">{{ page.date | date(format="%B %d, %Y") }}</span>
+    {% if page.taxonomies.tags %}
+    <div class="post-tags">
+        {% for tag in page.taxonomies.tags %}
+        <span class="post-tag">#<a href="{{ get_taxonomy_url(kind="tags", name=tag) | safe }}">{{ tag }}</a></span>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% endmacro post_header %}
+
+{% macro list_pages(pages) %}
+{% for page in pages %}
+<div class="post">
+    {{ self::post_header(page=page) }}
+    {% if config.extra.slim_summary %}
+    {% if page.summary %}
+    <div class="summary">
+        {{ page.summary | safe | striptags }}
+        <a class="read-more" href="{{ page.permalink }}">&hellip;</a>
+    </div>
+    {% endif %}
+    {% elif config.extra.slim_content %}
+    <div class="content">
+        {{ page.content | safe | striptags }}
+    </div>
+    {% endif %}
+</div>
+{% endfor %}
+{% endmacro list_posts %}
+
+{% macro pagination(paginator) %}
+<div class="pagination">
+    {% if paginator.previous %}
+    <a rel="prev" href="{{paginator.previous}}" class="btn previous">Newer</a>
+    {% endif %}
+    {% if paginator.next %}
+    <a rel="next" href="{{paginator.next}}" class="btn next">Older</a>
+    {% endif %}
+</div>
+{% endmacro paginator %}
+
+{% macro footer() %}
+<div class="footer">
+    <!-- Begin Mailchimp Signup Form -->
+<link href="//cdn-images.mailchimp.com/embedcode/slim-10_7.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+	#mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+	/* Add your own Mailchimp form style overrides in your site stylesheet or in this style block.
+	   We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+</style>
+<div id="mc_embed_signup">
+<form action="https://github.us5.list-manage.com/subscribe/post?u=601a6b313c482fcc9ad9f95ee&amp;id=b027c947d8" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+    <div id="mc_embed_signup_scroll">
+	<label for="mce-EMAIL">Subscribe</label>
+	<input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="email address" required>
+    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+    <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_601a6b313c482fcc9ad9f95ee_b027c947d8" tabindex="-1" value=""></div>
+    <div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+    </div>
+</form>
+</div>
+
+<!--End mc_embed_signup-->
+    {% if config.extra.slim_footer %}
+    <p>{{ config.extra.slim_footer | safe }}</p>
+    {% else %}
+    <p>Powered by <a href="https://getzola.org">Zola</a></p>
+    {% endif %}
+</div>
+{% endmacro footer %}
