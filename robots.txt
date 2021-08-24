@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://identityphobe.github.io/sitemap.xml
